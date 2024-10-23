@@ -15,6 +15,9 @@ let devolver = [
 ];
 
 let importe = 2.85; //precio del articulo
+let valorPago = 0; // Entregado por el cliente
+let cambioADevolver = 0; //El cambio que entregamos al cliente
+
 
 function calculaTotal(efectivo){
     let total = 0.0;
@@ -51,7 +54,7 @@ function hayCambio(efectivo, cambio, posEfectivo){
             cambio -= efectivo[0][posEfectivo] * nBilletes;
             devolver[1][posEfectivo] = nBilletes;
             caja[1][posEfectivo] -= nBilletes
-            billetesDevueltos(devolver);           
+            billletesADisposicion(devolver);           
             console.log('devolver: '+devolver[1]);
             posEfectivo = buscar(efectivo, cambio);
         }else{
@@ -61,16 +64,16 @@ function hayCambio(efectivo, cambio, posEfectivo){
     return cambio == 0;
 }
 
-function billetesDevueltos(devolver){
+function billletesADisposicion(array){
     let cambio = '';
-    for(let i = 0; i < devolver[1].length; i++){
-        if(devolver[1][i] > 0 && devolver[0][i] >= 5){
-            cambio += '\nBillete de: '+devolver[0][i]+'€';
-            cambio += ' -----> '+devolver[1][i];
+    for(let i = 0; i < array[1].length; i++){
+        if(array[1][i] > 0 && array[0][i] >= 5){
+            cambio += '\nBillete de: '+array[0][i]+'€';
+            cambio += ' -----> '+array[1][i];
         }else{
-            if(devolver[1][i] > 0 && devolver[0][i] < 5){
-                cambio += '\nMoneda de: '+devolver[0][i]+'€';
-                cambio += ' -----> '+devolver[1][i];
+            if(array[1][i] > 0 && array[0][i] < 5){
+                cambio += '\nMoneda de: '+array[0][i]+'€';
+                cambio += ' -----> '+array[1][i];
             }
         }
     }
@@ -89,25 +92,28 @@ if(pago[0][pago[0].length - 1] - importe == 0){ //Pago justo
         if(pago[0][pago[0].length - 1] < importe){  //Pago menor al precio del artículo
             alert('Falta dinero para poder comprar');
         }else{                                         // Hay cambio y se devuelve dinero
-            let posCaja = buscar(caja, 47.15);
-            let valorPago = 0;
+            // Para sacar del array la cantidad pagada
+            for(let i = 0; i < pago[1].length; i++){
+                if(pago[1][i] > 0){
+                    valorPago += pago[0][i];
+                    caja[1][i] += pago[1][i];
+                    console.log('Valor de pago: '+valorPago)
+                }
+            }
 
-            if(hayCambio(caja, 47.15, posCaja)){
+            cambioADevolver = valorPago - importe;
+
+            let posCaja = buscar(caja, cambioADevolver);
+
+            if(hayCambio(caja, cambioADevolver, posCaja)){
+                let cantidadCaja = '';
                 alert('Hay cambio');
-                alert(billetesDevueltos(devolver));
-
-                // Para sacar del array la cantidad pagada
-                for(let i = 0; i < pago[1].length; i++){
-                    if(pago[1][i] > 0){
-                        valorPago += pago[0][i];
-                        caja[1][i] += pago[1][i];
-                        console.log('Valor de pago: '+valorPago)
-                        console.log('Caja con nuevos billetes: '+caja[1]);
-                    }
-                } 
+                alert('Billetes a devolver: '+billletesADisposicion(devolver));
                 caja[0][15] = caja[0][15] + importe;
-                console.log('Caja despues de cambio: '+caja[1])
+
+                cantidadCaja += billletesADisposicion(caja);
                 alert('Nuevo valor de caja es: '+caja[0][15]);
+                alert('Caja despues de cambio: '+cantidadCaja);
             }else{
                 alert('No hay cambio')
             }
