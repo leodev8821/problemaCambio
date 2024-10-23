@@ -1,4 +1,5 @@
 let caja = [
+/*    0     1    2   3   4   5   6  7  8    9     10    11    12   13     14*/
     [500, 200, 100, 50, 20, 10,  5, 2, 1, 0.50, 0.20, 0.10, 0.05, 0.02, 0.01 ],// Denominación
     [ 0,   0,   0 , 1 ,  4,  8 , 2, 5 ,4 ,  0 ,  0 ,   1 ,    2 ,  3 ,   1],  //cantidades de billetes
 ];
@@ -10,10 +11,10 @@ let pago = [
 
 let devolver = [
     [500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [  0,  0,   0,   0,  0,  0, 0, 0, 0,  0,   0,   0,    0,   0,    0]
 ];
 
-let importe = 5; //precio del articulo
+let importe = 2.5; //precio del articulo
 
 function calculaTotal(efectivo){
     let total = 0.0;
@@ -37,23 +38,41 @@ function buscar(efectivo, cambio) {
         return pos;
 }
 
-function hayCambio(efectivo, cambio){
-    let posCaja = buscar(caja, cambio);
+function hayCambio(efectivo, cambio, posEfectivo){
     let nBilletes = 0;
 
-    while (cambio > 0 && posCaja < efectivo[1].length) {
+    while (cambio > 0 && posEfectivo < efectivo[1].length) {
         console.log("cambio: " + cambio);
-        console.log("pos: " + posCaja);
-        nBilletes = Math.trunc((cambio / efectivo[0][posCaja]));
+        console.log("pos: " + posEfectivo);
+        nBilletes = Math.trunc((cambio / efectivo[0][posEfectivo]));
         console.log('nBilletes: '+nBilletes)
-        if (nBilletes <= efectivo[1][posCaja] && nBilletes>=1) {
-            cambio -= efectivo[0][posCaja] * nBilletes;
-            posCaja = buscar(efectivo, cambio);
+        if (nBilletes <= efectivo[1][posEfectivo] && nBilletes>=1) {
+            cambio -= efectivo[0][posEfectivo] * nBilletes;
+            devolver[1][posEfectivo] = nBilletes;
+            billetesDevueltos(devolver);
+            console.log('devolver: '+devolver[1]);
+            posEfectivo = buscar(efectivo, cambio);
         }else{
-            posCaja++;
+            posEfectivo++;
         }   
     }
     return cambio == 0;
+}
+
+function billetesDevueltos(devolver){
+    let cambio = '';
+    for(let i = 0; i < devolver[1].length; i++){
+        if(devolver[1][i] > 0 && devolver[0][i] >= 5){
+            cambio += '\nBillete de: '+devolver[0][i]+'€';
+            cambio += ' -----> '+devolver[1][i];
+        }else{
+            if(devolver[1][i] > 0 && devolver[0][i] < 5){
+                cambio += '\nMoneda de: '+devolver[0][i]+'€';
+                cambio += ' -----> '+devolver[1][i];
+            }
+        }
+    }
+    return cambio;
 }
 
 pago = calculaTotal(pago);
@@ -68,8 +87,10 @@ if(pago[0][pago[0].length - 1] - importe == 0){ //Pago justo
         if(pago[0][pago[0].length - 1] < importe){  //Pago menor al precio del artículo
             alert('Falta dinero para poder comprar');
         }else{
-            if(hayCambio(caja, 45)){
-                alert('Hay cambio')
+            let posCaja = buscar(caja, 47.5);
+            if(hayCambio(caja, 47.5, posCaja)){
+                alert('Hay cambio');
+                alert(billetesDevueltos(devolver));
             }else{
                 alert('No hay cambio')
             }
