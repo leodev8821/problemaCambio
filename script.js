@@ -1,7 +1,7 @@
 let caja = [
-/*    0     1    2   3   4   5   6  7  8    9     10    11    12   13     14*/
-    [500, 200, 100, 50, 20, 10,  5, 2, 1, 0.50, 0.20, 0.10, 0.05, 0.02, 0.01 ],// Denominación
-    [ 0,   0,   0 , 1 ,  4,  8 , 2, 5 ,4 ,  0 ,  0 ,   1 ,    2 ,  3 ,   1],  //cantidades de billetes
+    /*    0     1    2   3   4   5   6  7  8    9     10    11    12   13     14*/
+        [500, 200, 100, 50, 20, 10,  5, 2, 1, 0.50, 0.20, 0.10, 0.05, 0.02, 0.01 ],// Denominación
+        [ 0,   0,   0 , 1 ,  4,  8 , 2, 5 ,4 ,  2 ,  0 ,   1 ,    2 ,  3 ,   1],  //cantidades de billetes
 ];
 
 let pago = [
@@ -49,8 +49,10 @@ function hayCambio(efectivo, cambio, posEfectivo){
         if (nBilletes <= efectivo[1][posEfectivo] && nBilletes>=1) {
             cambio -= efectivo[0][posEfectivo] * nBilletes;
             devolver[1][posEfectivo] = nBilletes;
+            caja[1][posEfectivo] -= nBilletes
             billetesDevueltos(devolver);
             console.log('devolver: '+devolver[1]);
+            console.log('Caja despues de cambio: '+caja)
             posEfectivo = buscar(efectivo, cambio);
         }else{
             posEfectivo++;
