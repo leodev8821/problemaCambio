@@ -1,5 +1,10 @@
 # problemaCambio
 
+# Integrantes
+- Carlos Ordoñez
+- Natalia Fernandez
+- Jaime Caicedo
+
 Disponemos en la caja del siguiente dinero distribuido de la siguiente manera: 234,27 € (información que se debe cargar en un array)
 
 ```
