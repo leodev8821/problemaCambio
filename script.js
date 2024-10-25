@@ -32,13 +32,10 @@ function calculaTotal(efectivo){
 
 function buscar(efectivo, cambio) {
     let pos = 0;
-    while (efectivo[0][pos] >= cambio) {
+    while (efectivo[0][pos] > cambio) {
         pos++;
     }
-    if(efectivo[0][pos-1] == cambio)
-        return pos-1;
-    else
-        return pos;
+    return pos;
 }
 
 function hayCambio(efectivo, cambio, posEfectivo){
@@ -92,16 +89,8 @@ if(pago[0][pago[0].length - 1] - importe == 0){ //Pago justo
         if(pago[0][pago[0].length - 1] < importe){  //Pago menor al precio del artículo
             alert('Falta dinero para poder comprar');
         }else{                                         // Hay cambio y se devuelve dinero
-            // Para sacar del array la cantidad pagada
-            for(let i = 0; i < pago[1].length; i++){
-                if(pago[1][i] > 0){
-                    valorPago += pago[0][i];
-                    caja[1][i] += pago[1][i];
-                    console.log('Valor de pago: '+valorPago)
-                }
-            }
-
-            cambioADevolver = valorPago - importe;
+            
+            cambioADevolver = pago[0][pago[0].length-1] - importe;
 
             let posCaja = buscar(caja, cambioADevolver);
 
